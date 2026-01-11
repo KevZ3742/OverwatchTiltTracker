@@ -10,22 +10,20 @@ FIELDS = [
     "session_losses",
     "session_games",
     "session_seconds",
-    "frustration",  # now session average frustration
+    "frustration",
     "session_deaths",
     "last_game_deaths",
     "role",
     "tilted"
 ]
 
-# ---------------- CSV ---------------- #
-
+# CSV
 def ensure_csv_exists():
     if not os.path.exists(FILE_NAME):
         with open(FILE_NAME, "w", newline="") as f:
             csv.writer(f).writerow(FIELDS)
 
-# ---------------- App ---------------- #
-
+# App
 class TiltTracker:
     def __init__(self, root):
         self.root = root
@@ -40,14 +38,14 @@ class TiltTracker:
 
         self.build_idle_ui()
 
-    # ---------- Session State ---------- #
+    # Session State
     def reset_session(self):
         self.session_active = False
         self.start_time = None
         self.games = []  # list of dicts: each game
         self.loss_streak = 0
 
-    # ---------- UI Builders ---------- #
+    # UI Builders
     def clear_ui(self):
         for widget in self.main.winfo_children():
             widget.destroy()
@@ -69,7 +67,7 @@ class TiltTracker:
     def build_session_ui(self):
         self.clear_ui()
 
-        # --- Timer ---
+        # Timer
         self.timer_label = ttk.Label(
             self.main,
             text="Session Time: 0 sec",
@@ -77,7 +75,7 @@ class TiltTracker:
         )
         self.timer_label.pack(pady=10)
 
-        # --- Game Logging Section ---
+        # Game Loggin Section
         self.game_frame = ttk.LabelFrame(self.main, text="Game Logging", padding=10)
         self.game_frame.pack(fill="x", pady=5)
 
@@ -114,13 +112,13 @@ class TiltTracker:
         self.games_listbox.pack(fill="x")
         self.games_listbox.bind("<<ListboxSelect>>", self.on_select_game)
 
-        # --- Session Stats Section ---
+        # Session Stats Section
         self.stats_frame = ttk.LabelFrame(self.main, text="Session Stats", padding=10)
         self.stats_frame.pack(fill="x", pady=5)
         self.summary_label = ttk.Label(self.stats_frame, text="", justify="left")
         self.summary_label.pack(anchor="w")
 
-        # --- Supervised Learning Section ---
+        # Supervised Learning Section
         self.supervised_frame = ttk.LabelFrame(self.main, text="Supervised Learning", padding=10)
         self.supervised_frame.pack(fill="x", pady=5)
         ttk.Label(self.supervised_frame, text="Tilted overall this session?").pack(anchor="w")
@@ -137,7 +135,7 @@ class TiltTracker:
         self.update_timer()
         self.update_summary()
 
-    # ---------- Logic ---------- #
+    # Logic
     def start_session(self):
         self.reset_session()
         self.session_active = True
@@ -276,7 +274,7 @@ class TiltTracker:
             session_losses,
             games_played,
             session_seconds,
-            avg_frustration,  # now session average frustration
+            avg_frustration,
             session_deaths,
             last_game["deaths"],
             last_game["role"],
@@ -290,7 +288,7 @@ class TiltTracker:
         self.session_active = False
         self.build_idle_ui()
 
-# ---------------- Run ---------------- #
+# Run 
 if __name__ == "__main__":
     root = tk.Tk()
     app = TiltTracker(root)
